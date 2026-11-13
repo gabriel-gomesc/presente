@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#f3e4dc" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <title>Meu Amor 🤍</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Allura&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="atmosphere" aria-hidden="true">
+    <div class="mist mist-a"></div>
+    <div class="mist mist-b"></div>
+    <div class="glow-orb"></div>
+    <canvas id="petals"></canvas>
+  </div>
+
+  <!-- Tela 1: Pergunta -->
+  <section id="screen-ask" class="screen screen-ask is-active" aria-live="polite">
+    <div class="ask-content">
+      <p class="ask-whisper">uma perguntinha…</p>
+      <h1 class="ask-title">Você me ama?</h1>
+      <div class="ask-actions">
+        <button type="button" id="btn-yes" class="btn btn-yes">Sim</button>
+        <button type="button" id="btn-no" class="btn btn-no">Não</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tela 2: Poema -->
+  <section id="screen-poem" class="screen screen-poem" hidden>
+    <div class="poem-shell">
+      <figure class="couple-photo">
+        <img
+          src="assets/nos.png"
+          alt="Meu amor"
+          width="1200"
+          height="400"
+        />
+      </figure>
+      <p class="poem-label">Meu Amor</p>
+      <article class="poem" id="poem">
+        <p class="stanza" data-stanza>
+          Sem você, meu mundo não tem brilho, não tem vida.
+          É como se sempre houvesse algo faltando.
+        </p>
+        <p class="stanza" data-stanza>
+          Eu sou tão feliz contigo. Meu sorriso é tão sincero ao teu lado,
+          teu amor me traz conforto e paz.
+        </p>
+        <p class="stanza" data-stanza>
+          Adoro teu abraço caloroso, teu beijo doce,
+          teu olhar brilhante, teu sorriso resplandecente.
+        </p>
+        <p class="stanza" data-stanza>
+          Acredito que nem que eu procurasse por mil galáxias
+          encontraria algo que tivesse tua beleza.
+        </p>
+        <p class="stanza" data-stanza>
+          Você é minha pessoa favorita, minha melhor amiga, minha companheira.
+          Não faz ideia do quanto eu te acho incrível.
+        </p>
+        <p class="stanza" data-stanza>
+          Por você, eu faço tudo. Se me perguntarem o que é o amor pra mim,
+          eu diria que é você.
+        </p>
+        <p class="stanza" data-stanza>
+          Quero te ver sorrindo, dançando, se empanzinando, jogando, sendo manhosa.
+          Eu te quero exatamente do jeito que você é, para todo o sempre.
+        </p>
+        <p class="stanza stanza-climax" data-stanza>
+          Eu te amo. Agora, assim como te amei ontem e amarei amanhã,
+          para todo o sempre.
+        </p>
+        <p class="stanza stanza-final" data-stanza>
+          Você é meu lírio, a única flor do meu jardim.
+          Você é meu lar.
+        </p>
+      </article>
+      <button type="button" id="btn-continue" class="btn btn-continue" hidden>
+        Continuar
+      </button>
+    </div>
+  </section>
+
+  <!-- Tela 3: Lírio -->
+  <section id="screen-lily" class="screen screen-lily" hidden>
+    <div class="lily-stage">
+      <svg
+        id="lily-svg"
+        class="lily"
+        viewBox="0 0 320 420"
+        role="img"
+        aria-label="Um lírio desabrochando"
+      >
+        <defs>
+          <radialGradient id="petalGlow" cx="50%" cy="40%" r="60%">
+            <stop offset="0%" stop-color="#fff8f2" stop-opacity="1" />
+            <stop offset="55%" stop-color="#f3d4c8" stop-opacity="0.95" />
+            <stop offset="100%" stop-color="#d9a48f" stop-opacity="0.85" />
+          </radialGradient>
+          <radialGradient id="centerGlow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#fff6c8" />
+            <stop offset="45%" stop-color="#f0c35a" />
+            <stop offset="100%" stop-color="#c9842a" stop-opacity="0.4" />
+          </radialGradient>
+          <linearGradient id="stemGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#6f9a68" />
+            <stop offset="100%" stop-color="#3f5f3c" />
+          </linearGradient>
+          <filter id="softBloom" x="-40%" y="-40%" width="180%" height="180%">
+            <feGaussianBlur stdDeviation="4" result="blur" />
+            <feMerge>
+              <feMergeNode in="blur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+          <filter id="sparkle" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="1.2" />
+          </filter>
+        </defs>
+
+        <!-- Caule -->
+        <path
+          class="stem"
+          d="M160 410 C158 340, 162 280, 160 220"
+          fill="none"
+          stroke="url(#stemGrad)"
+          stroke-width="6"
+          stroke-linecap="round"
+        />
+        <path
+          class="leaf leaf-l"
+          d="M158 320 C120 300, 95 270, 108 245 C130 255, 148 280, 158 300 Z"
+          fill="#5f8a58"
+        />
+        <path
+          class="leaf leaf-r"
+          d="M162 300 C200 280, 228 255, 218 230 C195 242, 175 265, 162 285 Z"
+          fill="#6b9662"
+        />
+
+        <!-- Pétalas (ordem: trás → frente) -->
+        <g class="bloom" transform="translate(160 188)">
+          <path class="petal p1" d="M0 18 C-18 -40, -55 -55, -8 -95 C10 -70, 18 -20, 0 18 Z" fill="url(#petalGlow)" />
+          <path class="petal p2" d="M0 18 C22 -38, 58 -52, 12 -94 C-6 -68, -14 -18, 0 18 Z" fill="url(#petalGlow)" />
+          <path class="petal p3" d="M0 20 C-48 -5, -78 20, -70 70 C-40 55, -12 40, 0 20 Z" fill="url(#petalGlow)" />
+          <path class="petal p4" d="M0 20 C48 -5, 78 20, 70 70 C40 55, 12 40, 0 20 Z" fill="url(#petalGlow)" />
+          <path class="petal p5" d="M0 22 C-30 55, -20 105, 0 118 C20 105, 30 55, 0 22 Z" fill="url(#petalGlow)" />
+          <path class="petal p6" d="M0 10 C-8 -55, 8 -95, 0 -118 C-8 -95, 8 -55, 0 10 Z" fill="url(#petalGlow)" filter="url(#softBloom)" />
+
+          <g class="stamen">
+            <line x1="0" y1="8" x2="-14" y2="-42" stroke="#c9a227" stroke-width="1.5" />
+            <line x1="0" y1="8" x2="0" y2="-52" stroke="#d4af37" stroke-width="1.6" />
+            <line x1="0" y1="8" x2="14" y2="-42" stroke="#c9a227" stroke-width="1.5" />
+            <circle cx="-14" cy="-44" r="3.2" fill="#f0c35a" />
+            <circle cx="0" cy="-54" r="3.6" fill="#ffe28a" />
+            <circle cx="14" cy="-44" r="3.2" fill="#f0c35a" />
+          </g>
+          <circle class="heart" cx="0" cy="8" r="10" fill="url(#centerGlow)" filter="url(#softBloom)" />
+        </g>
+
+        <!-- Brilhos -->
+        <g class="sparks" filter="url(#sparkle)">
+          <circle class="spark s1" cx="96" cy="120" r="2.2" fill="#fff6c8" />
+          <circle class="spark s2" cx="230" cy="150" r="1.8" fill="#ffe9a8" />
+          <circle class="spark s3" cx="120" cy="210" r="1.5" fill="#fff" />
+          <circle class="spark s4" cx="210" cy="95" r="2" fill="#fff4d0" />
+          <circle class="spark s5" cx="70" cy="180" r="1.4" fill="#ffe28a" />
+          <circle class="spark s6" cx="250" cy="200" r="1.7" fill="#fff" />
+          <circle class="spark s7" cx="160" cy="70" r="2.4" fill="#fff8dc" />
+        </g>
+      </svg>
+
+      <p class="lily-caption">meu lírio</p>
+      <p class="lily-love">Eu te amo</p>
+    </div>
+  </section>
+
+  <script src="app.js"></script>
+</body>
+</html>

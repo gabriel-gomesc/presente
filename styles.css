@@ -1,0 +1,531 @@
+:root {
+  --ink: #15241c;
+  --ink-soft: #2f4538;
+  --rose: #b85f63;
+  --rose-deep: #8f4044;
+  --gold: #c9a46a;
+  --cream: #fff7f1;
+  --petal: #f8e6dc;
+  --sage: #8fa98a;
+  --moss: #4f6d4c;
+  --shadow: rgba(45, 60, 48, 0.22);
+  --font-display: "Cormorant Garamond", Georgia, serif;
+  --font-script: "Allura", cursive;
+  --font-ui: "Outfit", system-ui, sans-serif;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-ui);
+  color: var(--ink);
+  background:
+    radial-gradient(ellipse 90% 70% at 15% 10%, rgba(255, 214, 200, 0.55), transparent 55%),
+    radial-gradient(ellipse 80% 60% at 90% 20%, rgba(186, 214, 186, 0.45), transparent 50%),
+    radial-gradient(ellipse 70% 50% at 50% 100%, rgba(201, 164, 106, 0.22), transparent 55%),
+    linear-gradient(165deg, #f6ebe4 0%, #e7efe4 42%, #f3e4dc 100%);
+  background-attachment: fixed;
+  overflow-x: hidden;
+  min-height: 100dvh;
+  overscroll-behavior-y: none;
+}
+
+.atmosphere {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.mist {
+  position: absolute;
+  width: 55vmax;
+  height: 55vmax;
+  border-radius: 50%;
+  filter: blur(60px);
+  opacity: 0.45;
+  animation: drift 18s ease-in-out infinite alternate;
+}
+
+.mist-a {
+  top: -10%;
+  left: -8%;
+  background: radial-gradient(circle, #f7cfc4 0%, transparent 70%);
+}
+
+.mist-b {
+  right: -12%;
+  bottom: -15%;
+  background: radial-gradient(circle, #c5d9c2 0%, transparent 70%);
+  animation-duration: 22s;
+  animation-delay: -4s;
+}
+
+.glow-orb {
+  position: absolute;
+  width: 28vmax;
+  height: 28vmax;
+  left: 50%;
+  top: 42%;
+  translate: -50% -50%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 236, 200, 0.35), transparent 68%);
+  animation: pulse-orb 6s ease-in-out infinite;
+}
+
+#petals {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.screen {
+  position: relative;
+  z-index: 1;
+  min-height: 100dvh;
+  min-height: 100svh;
+  display: grid;
+  place-items: center;
+  padding:
+    calc(1.5rem + var(--safe-top))
+    calc(1.15rem + var(--safe-right))
+    calc(2rem + var(--safe-bottom))
+    calc(1.15rem + var(--safe-left));
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.7s ease, visibility 0.7s ease;
+}
+
+.screen.is-active {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.screen[hidden] {
+  display: none !important;
+}
+
+/* —— Pergunta —— */
+.screen-ask {
+  align-content: center;
+}
+
+.ask-content {
+  text-align: center;
+  width: min(28rem, 100%);
+  animation: rise-in 1s ease both;
+}
+
+.ask-whisper {
+  margin: 0 0 0.55rem;
+  font-family: var(--font-ui);
+  font-weight: 400;
+  font-size: 0.82rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.ask-title {
+  margin: 0 0 2rem;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(2.6rem, 11vw, 4.4rem);
+  line-height: 1.05;
+  letter-spacing: 0.02em;
+  color: var(--ink);
+  text-shadow: 0 1px 0 rgba(255, 247, 241, 0.55);
+}
+
+.ask-actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.9rem;
+  min-height: 3.6rem;
+}
+
+.btn {
+  font-family: var(--font-ui);
+  font-size: 1.05rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  border: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+}
+
+.btn-yes {
+  position: relative;
+  z-index: 2;
+  min-width: 6.5rem;
+  padding: 0.95rem 2.2rem;
+  border-radius: 999px;
+  color: #fffaf7;
+  background: linear-gradient(145deg, var(--rose) 0%, var(--rose-deep) 100%);
+  box-shadow: 0 10px 28px rgba(143, 64, 68, 0.35);
+}
+
+.btn-yes:hover {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 14px 34px rgba(168, 93, 93, 0.36);
+}
+
+.btn-yes:active {
+  transform: scale(0.98);
+}
+
+.btn-no {
+  position: relative;
+  z-index: 3;
+  min-width: 6.2rem;
+  padding: 0.95rem 2rem;
+  border-radius: 999px;
+  color: var(--ink);
+  background: rgba(255, 250, 246, 0.94);
+  border: 1px solid rgba(31, 51, 41, 0.22);
+  box-shadow: 0 6px 18px var(--shadow);
+  user-select: none;
+  touch-action: none;
+}
+
+.btn-no.is-fleeing {
+  position: fixed;
+  z-index: 30;
+  transition: left 0.16s ease, top 0.16s ease;
+}
+
+.btn-continue {
+  position: sticky;
+  bottom: calc(1rem + var(--safe-bottom));
+  margin: 2.2rem auto 0;
+  display: block;
+  min-width: 10rem;
+  padding: 1rem 2.2rem;
+  border-radius: 999px;
+  color: var(--cream);
+  background: linear-gradient(145deg, var(--moss), #3f5f3c);
+  box-shadow: 0 10px 26px rgba(63, 95, 60, 0.25);
+  animation: rise-in 0.8s ease both;
+}
+
+.btn-continue:active {
+  transform: scale(0.98);
+}
+
+/* —— Poema —— */
+.screen-poem {
+  align-items: start;
+  place-items: start center;
+}
+
+.poem-shell {
+  width: min(40rem, 100%);
+  text-align: center;
+  padding-top: 0.5rem;
+  padding-bottom: 1rem;
+}
+
+.couple-photo {
+  margin: 0 auto 1.1rem;
+  width: min(26rem, 100%);
+  opacity: 0;
+  transform: translateY(14px) scale(0.98);
+  animation: photo-in 1.1s ease 0.15s forwards;
+}
+
+.couple-photo img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 3.4 / 1;
+  object-fit: cover;
+  object-position: center center;
+  border-radius: 999px;
+  box-shadow:
+    0 0 0 1px rgba(255, 247, 241, 0.7),
+    0 14px 34px rgba(45, 60, 48, 0.16);
+  filter: saturate(1.06) contrast(1.03);
+}
+
+.poem-label {
+  margin: 0 0 1.4rem;
+  font-family: var(--font-script);
+  font-size: clamp(2.5rem, 10vw, 3.4rem);
+  line-height: 1;
+  color: var(--rose-deep);
+  opacity: 0;
+  animation: fade-soft 1.2s ease 0.45s forwards;
+}
+
+@keyframes photo-in {
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.poem {
+  display: grid;
+  gap: 1.45rem;
+}
+
+.stanza {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.12rem, 4.4vw, 1.45rem);
+  font-weight: 400;
+  line-height: 1.55;
+  color: var(--ink);
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.9s ease, transform 0.9s ease;
+}
+
+.stanza.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.stanza-climax {
+  font-style: italic;
+  font-size: clamp(1.22rem, 4.8vw, 1.65rem);
+  color: var(--rose-deep);
+}
+
+.stanza-final {
+  font-weight: 500;
+  font-size: clamp(1.28rem, 5vw, 1.75rem);
+  color: var(--moss);
+}
+
+/* —— Lírio —— */
+.lily-stage {
+  text-align: center;
+  width: min(24rem, 100%);
+}
+
+.lily {
+  width: min(260px, 68vw);
+  height: auto;
+  overflow: visible;
+  opacity: 0;
+  transform: translateY(24px) scale(0.92);
+}
+
+.lily.is-blooming {
+  animation: lily-enter 1.2s ease forwards;
+}
+
+.stem,
+.leaf {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center bottom;
+}
+
+.lily.is-blooming .stem {
+  animation: draw-stem 1s ease 0.2s forwards;
+}
+
+.lily.is-blooming .leaf-l {
+  animation: unfurl-leaf 0.9s ease 0.7s forwards;
+}
+
+.lily.is-blooming .leaf-r {
+  animation: unfurl-leaf 0.9s ease 0.9s forwards;
+}
+
+.bloom {
+  transform-box: fill-box;
+  transform-origin: center bottom;
+}
+
+.petal {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center bottom;
+  transform: scale(0.15);
+}
+
+.lily.is-blooming .p1 { animation: bloom-petal 1.4s cubic-bezier(0.22, 1, 0.36, 1) 1.1s forwards; }
+.lily.is-blooming .p2 { animation: bloom-petal 1.4s cubic-bezier(0.22, 1, 0.36, 1) 1.2s forwards; }
+.lily.is-blooming .p3 { animation: bloom-petal 1.35s cubic-bezier(0.22, 1, 0.36, 1) 1.3s forwards; }
+.lily.is-blooming .p4 { animation: bloom-petal 1.35s cubic-bezier(0.22, 1, 0.36, 1) 1.4s forwards; }
+.lily.is-blooming .p5 { animation: bloom-petal 1.3s cubic-bezier(0.22, 1, 0.36, 1) 1.5s forwards; }
+.lily.is-blooming .p6 { animation: bloom-petal 1.5s cubic-bezier(0.22, 1, 0.36, 1) 1.55s forwards; }
+
+.stamen,
+.heart {
+  opacity: 0;
+}
+
+.lily.is-blooming .stamen {
+  animation: fade-soft 0.8s ease 2.2s forwards;
+}
+
+.lily.is-blooming .heart {
+  animation: heart-glow 1.2s ease 2.3s forwards;
+}
+
+.spark {
+  opacity: 0;
+}
+
+.lily.is-blooming .s1 { animation: sparkle 2.4s ease-in-out 2.5s infinite; }
+.lily.is-blooming .s2 { animation: sparkle 2.8s ease-in-out 2.7s infinite; }
+.lily.is-blooming .s3 { animation: sparkle 2.2s ease-in-out 2.9s infinite; }
+.lily.is-blooming .s4 { animation: sparkle 2.6s ease-in-out 3.1s infinite; }
+.lily.is-blooming .s5 { animation: sparkle 2.3s ease-in-out 2.6s infinite; }
+.lily.is-blooming .s6 { animation: sparkle 2.7s ease-in-out 3s infinite; }
+.lily.is-blooming .s7 { animation: sparkle 2.5s ease-in-out 2.8s infinite; }
+
+.lily-caption,
+.lily-love {
+  opacity: 0;
+  margin: 0;
+}
+
+.lily-caption {
+  margin-top: 1rem;
+  font-family: var(--font-display);
+  font-size: 1rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.lily-love {
+  margin-top: 0.2rem;
+  font-family: var(--font-script);
+  font-size: clamp(2.8rem, 12vw, 4.2rem);
+  color: var(--rose-deep);
+  line-height: 1;
+}
+
+.lily-stage.is-ready .lily-caption {
+  animation: fade-soft 1s ease 3.2s forwards;
+}
+
+.lily-stage.is-ready .lily-love {
+  animation: fade-soft 1.2s ease 3.6s forwards;
+}
+
+@keyframes drift {
+  from { transform: translate(0, 0) scale(1); }
+  to { transform: translate(4%, 6%) scale(1.08); }
+}
+
+@keyframes pulse-orb {
+  0%, 100% { opacity: 0.7; transform: translate(-50%, -50%) scale(1); }
+  50% { opacity: 1; transform: translate(-50%, -50%) scale(1.08); }
+}
+
+@keyframes rise-in {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fade-soft {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes lily-enter {
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes draw-stem {
+  from { opacity: 0; stroke-dasharray: 220; stroke-dashoffset: 220; }
+  to { opacity: 1; stroke-dasharray: 220; stroke-dashoffset: 0; }
+}
+
+@keyframes unfurl-leaf {
+  from { opacity: 0; transform: scale(0.4) rotate(-12deg); }
+  to { opacity: 1; transform: scale(1) rotate(0deg); }
+}
+
+@keyframes bloom-petal {
+  0% { opacity: 0; transform: scale(0.12); }
+  60% { opacity: 1; }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes heart-glow {
+  0% { opacity: 0; transform: scale(0.4); }
+  70% { opacity: 1; transform: scale(1.15); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes sparkle {
+  0%, 100% { opacity: 0.15; transform: scale(0.7); }
+  50% { opacity: 1; transform: scale(1.35); }
+}
+
+@media (max-width: 720px) {
+  .ask-content {
+    padding-inline: 0.25rem;
+  }
+
+  .ask-actions {
+    gap: 0.75rem;
+  }
+
+  .btn-yes,
+  .btn-no {
+    min-height: 3.1rem;
+    padding-inline: 1.7rem;
+    font-size: 1.08rem;
+  }
+
+  .poem {
+    gap: 1.25rem;
+  }
+
+  .couple-photo {
+    width: 100%;
+  }
+
+  .mist {
+    filter: blur(48px);
+    opacity: 0.38;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .stanza {
+    opacity: 1;
+    transform: none;
+  }
+}
